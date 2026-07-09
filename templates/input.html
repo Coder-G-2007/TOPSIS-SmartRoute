@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="container mt-5">
+
+    <h2 class="text-center mb-4">
+        Healthcare Waste Transportation Dashboard
+    </h2>
+
+    <div class="row">
+
+        <!-- Hospital Information Card -->
+
+        <div class="col-lg-6">
+
+            <div class="card shadow">
+
+                <div class="card-header bg-primary text-white">
+
+                    <h4>🏥 Hospital Information</h4>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Hospital Name
+                        </label>
+
+                        <input
+                        type="text"
+                        class="form-control"
+                        id="hospitalName"
+                        placeholder="Enter Hospital Name">
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Hospital Location
+                        </label>
+
+                        <input
+                        type="text"
+                        class="form-control"
+                        id="hospitalLocation"
+                        placeholder="Enter Location">
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Waste Generated (kg/day)
+                        </label>
+
+                        <input
+                        type="number"
+                        class="form-control"
+                        id="wasteGenerated"
+                        placeholder="Enter Waste Quantity">
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Destination CBWTF
+                        </label>
+
+                        <input
+                        type="text"
+                        class="form-control"
+                        id="destinationCBWTF"
+                        placeholder="Treatment Facility">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Route Summary -->
+
+        <div class="col-lg-6">
+
+            <div class="card shadow">
+
+                <div class="card-header bg-success text-white">
+
+                    <h4>🚛 Route Summary</h4>
+
+                </div>
+
+                <div class="card-body">
+
+                    <h5>Routes Added</h5>
+                    <p id="routeCountDisplay">0</p>
+
+                    <hr>
+
+                    <h5>Best Route</h5>
+                    <p id="bestRoute">--</p>
+
+                    <hr>
+
+                    <h5>Worst Route</h5>
+                    <p id="worstRoute">--</p>
+
+                    <hr>
+
+                    <h5>Status</h5>
+                    <span class="badge bg-warning text-dark" id="status">
+                        Waiting for Input
+                    </span>
+
+                    <hr>
+
+                    <div class="d-grid mt-3">
+                             <a href="{{ url_for('result_page') }}"
+                            class="btn btn-success"
+                            id="viewResultBtn">
+                            📊 View Detailed Analysis
+                        </a>
+                    </div>
+                    
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+    <div class="row mt-4">
+
+    <div class="col-lg-12">
+
+        <div class="card shadow">
+
+            <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+
+                <h4 class="mb-0">
+                    🚛 Route Information
+                </h4>
+
+                <button
+                    class="btn btn-success"
+                    id="addRoute">
+
+                    + Add Route
+
+                </button>
+
+            </div>
+
+            <div class="card-body">
+
+                <table class="table table-bordered table-hover text-center" id="routeTable">
+
+                    <thead class="table-primary">
+
+                    <tr>
+
+                        <th>Route</th>
+
+                        <th>Distance (km)</th>
+
+                        <th>Cost (₹)</th>
+
+                        <th>Infection Risk</th>
+
+                        <th>Carbon Emission</th>
+
+                        <th>Energy Consumption</th>
+
+                        <th>Service Reliability</th>
+
+                        <th>Delete</th>
+
+                    </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<div class="row mt-4">
+
+    <div class="col-lg-12">
+
+        <div class="card shadow">
+
+            <div class="card-header bg-info text-white">
+
+                <h4>⚖️ TOPSIS Criteria Weights</h4>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="row">
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Transportation Cost</label>
+                        <input type="number" class="form-control" id="weight_cost" placeholder="e.g. 0.25">
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Infection Risk</label>
+                        <input type="number" class="form-control" id="weight_risk" placeholder="e.g. 0.20">
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Carbon Emission</label>
+                        <input type="number" class="form-control" id="weight_carbon" placeholder="e.g. 0.15">
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Energy Consumption</label>
+                        <input type="number" class="form-control" id="weight_energy" placeholder="e.g. 0.15">
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Service Reliability</label>
+                        <input type="number" class="form-control" id="weight_reliability" placeholder="e.g. 0.25">
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<div class="text-center mt-4 mb-5">
+
+    <button class="btn btn-primary btn-lg px-5" id="calculateBtn">
+
+        Calculate Best Route
+
+    </button>
+
+</div>
+</div>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+</html>

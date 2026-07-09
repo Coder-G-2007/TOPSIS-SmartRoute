@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartRoute</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <style>
+        /* Enables smooth scrolling when clicking navbar links */
+        html {
+            scroll-behavior: smooth;
+        }
+        /* Adds padding to sections so the fixed/sticky navbar doesn't overlap content */
+        section {
+            padding: 80px 0;
+        }
+        .hero {
+            background-color: #f8f9fa;
+            padding: 100px 0;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="#home">
+             SmartRoute
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#home">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#about">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#features">Features</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#contact">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section id="home" class="hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold">SmartRoute</h1>
+                <h2 class="h4 text-muted mt-3">
+                    Healthcare Waste Transportation Decision Support System
+                </h2>
+                <p class="lead mt-4">
+                    Optimize biomedical waste transportation using the TOPSIS algorithm based on Transportation Cost, Infection Risk, Carbon Emission, Energy Consumption, and Service Reliability.
+                </p>
+                <a href="{{ url_for('input_page') }}" class="btn btn-primary btn-lg mt-3">
+                     Start Optimization
+                </a>
+            </div>
+            <div class="col-lg-6 text-center mt-4 mt-lg-0">
+                <img src="{{ url_for('static', filename='images/Topsis image.png') }}" alt="SmartRoute Optimization Dashboard" class="img-fluid rounded shadow">            </div>
+        </div>
+    </div>
+</section>
+
+<section id="about" class="bg-white">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="fw-bold mb-4">About SmartRoute</h2>
+                <p class="lead text-muted mx-auto" style="max-width: 800px;">
+                    SmartRoute is a specialized decision support system built to tackle the logistical complexities of hazardous healthcare waste management. By utilizing multi-criteria decision-making frameworks, it ensures compliance, safety, and environmental sustainability.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="features" class="bg-light">
+    <div class="container">
+        <h2 class="text-center fw-bold mb-5">Key Optimization Features</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h100 border-0 shadow-sm p-4">
+                    <h3 class="h5 fw-bold text-primary">TOPSIS Algorithm</h3>
+                    <p class="text-muted">Ranks alternative transportation routes dynamically by identifying the closest solution to the ideal objective.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h100 border-0 shadow-sm p-4">
+                    <h3 class="h5 fw-bold text-success">Risk Mitigation</h3>
+                    <p class="text-muted">Evaluates and minimizes population exposure to infection risks along routes while maintaining structural safety protocols.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h100 border-0 shadow-sm p-4">
+                    <h3 class="h5 fw-bold text-danger">Eco-Friendly Routing</h3>
+                    <p class="text-muted">Actively minimizes carbon emissions and overall fuel/energy consumption footprints across municipal boundaries.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="contact" class="bg-white">
+    <div class="container" style="max-width: 600px;">
+        <h2 class="text-center fw-bold mb-4">Contact Us</h2>
+        <form>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email address</label>
+                <input type="email" class="form-items form-control" id="email" placeholder="name@example.com">
+            </div>
+            <div class="mb-3">
+                <label for="message" class="form-label">Message</label>
+                <textarea class="form-control" id="message" rows="4" placeholder="Your query..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-dark w-100">Send Message</button>
+        </form>
+    </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+</html>

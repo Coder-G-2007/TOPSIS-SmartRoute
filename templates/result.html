@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TOPSIS Analysis Result</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+
+  <body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow">
+      <div class="container">
+        <a class="navbar-brand fw-bold" href="{{ url_for('home') }}">
+          SmartRoute
+        </a>
+        <a href="{{ url_for('input_page') }}" class="btn btn-outline-light">
+          ← Dashboard
+        </a>
+      </div>
+    </nav>
+
+    <div class="container my-5">
+      <div class="text-center mb-5">
+        <h1 class="fw-bold text-primary">TOPSIS Analysis Report</h1>
+        <p class="text-muted">
+          Healthcare Waste Transportation Route Optimization
+        </p>
+      </div>
+      <div class="card-body">
+
+    <div class="row">
+
+        <div class="col-md-6 mb-3">
+
+            <i class="bi bi-hospital text-primary"></i>
+            <strong> Hospital Name</strong>
+
+            <p class="mb-0">{{ result.hospital.hospital_name }}</p>
+
+        </div>
+
+        <div class="col-md-6 mb-3">
+
+            <i class="bi bi-geo-alt-fill text-danger"></i>
+            <strong> Hospital Location</strong>
+
+            <p class="mb-0">{{ result.hospital.hospital_location }}</p>
+
+        </div>
+
+    </div>
+
+    <hr>
+
+    <div class="row">
+
+        <div class="col-md-6">
+
+            <i class="bi bi-recycle text-success"></i>
+            <strong> Waste Generated</strong>
+
+            <p class="mb-0">
+                {{ result.hospital.waste_generated }} kg/day
+            </p>
+
+        </div>
+
+        <div class="col-md-6">
+
+            <i class="bi bi-truck text-warning"></i>
+            <strong> Destination CBWTF</strong>
+
+            <p class="mb-0">
+                {{ result.hospital.destination }}
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+    <br> <hr> <br>
+      <div class="row g-4 mb-5">
+        <div class="col-lg-3 col-md-6">
+          <div class="card shadow border-0 text-center h-100">
+            <div class="card-body">
+              <h1 class="text-success">🏆</h1>
+              <h5>Best Route</h5>
+              <h3 id="bestRouteResult">{{ result.best_route }}</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <div class="card shadow border-0 text-center h-100">
+            <div class="card-body">
+              <h1 class="text-danger">❌</h1>
+              <h5>Worst Route</h5>
+              <h3 id="worstRouteResult">{{ result.worst_route }}</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <div class="card shadow border-0 text-center h-100">
+            <div class="card-body">
+              <h1 class="text-warning">⭐</h1>
+              <h5>Highest Score</h5>
+              <h3 id="highestScore">{{ result.best_score }}</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <div class="card shadow border-0 text-center h-100">
+            <div class="card-body">
+              <h1 class="text-primary">🚛</h1>
+              <h5>Total Routes</h5>
+              <h3 id="totalRoutes">{{ result.ranking|length }}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card shadow mb-5">
+        <div class="card-header bg-success text-white">
+          <h4 class="mb-0">🏅 Route Ranking</h4>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered table-hover text-center">
+              <thead class="table-dark">
+                <tr>
+                  <th>Rank</th>
+                  <th>Route</th>
+                  <th>TOPSIS Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for route in result.ranking %}
+                <tr>
+                  <td>{{ loop.index }}</td>
+                  <td>{{ route.route }}</td>
+                  <td>{{ route.score }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-6 mb-4">
+          <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+              <h5 class="mb-0">📊 TOPSIS Score Distribution</h5>
+            </div>
+            <div class="card-body">
+              <canvas id="scoreChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6 mb-4">
+          <div class="card shadow">
+            <div class="card-header bg-warning">
+              <h5 class="mb-0">🥧 Criteria Weight Distribution</h5>
+            </div>
+            <div class="card-body">
+              <canvas id="weightChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card shadow mb-5">
+        <div class="card-header bg-info text-white">
+          <h5 class="mb-0">📈 Criteria Comparison</h5>
+        </div>
+        <div class="card-body">
+          <canvas id="criteriaChart"></canvas>
+        </div>
+      </div>
+
+      <div class="text-center">
+        <a href="{{ url_for('input_page') }}" class="btn btn-primary btn-lg">
+          ← Back to Dashboard
+        </a>
+        <button id="downloadPDF" class="btn btn-success btn-lg ms-3">
+          <i class="bi bi-file-earmark-pdf"></i> Download PDF
+        </button>
+        <button id="downloadExcel" class="btn btn-secondary btn-lg ms-3">
+          <i class="bi bi-file-earmark-excel"></i> Export Excel
+        </button>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <script id="topsis-data-bridge" type="application/json">
+      {{ result | tojson | safe }}
+    </script>
+
+    <script>
+      const resultData = JSON.parse(document.getElementById('topsis-data-bridge').textContent);
+      
+      const labels = resultData.ranking.map(item => item.route);
+      const scores = resultData.ranking.map(item => item.score);
+      const weights = resultData.weights;
+      const rawRoutes = resultData.raw_routes;
+
+      // Plugin to force a solid white background on canvas context prints
+      const whiteBackgroundPlugin = {
+        id: 'customCanvasBackgroundColor',
+        beforeDraw: (chart) => {
+          const { ctx } = chart;
+          ctx.save();
+          ctx.globalCompositeOperation = 'destination-over';
+          ctx.fillStyle = '#ffffff'; // Solid White
+          ctx.fillRect(0, 0, chart.width, chart.height);
+          ctx.restore();
+        }
+      };
+
+      // Register the white background plugin globally for all chart objects
+      Chart.register(whiteBackgroundPlugin);
+
+      // ==========================================
+      // CHART 1: Score Bar Chart
+      // ==========================================
+      const scoreChart = new Chart(document.getElementById('scoreChart'), {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'TOPSIS Preference Score',
+            data: scores,
+            backgroundColor: 'rgba(13, 110, 253, 0.7)',
+            borderColor: 'rgba(13, 110, 253, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          animation: false,
+          scales: {
+            y: { beginAtZero: true, max: 1 }
+          }
+        }
+      });
+
+      // ==========================================
+      // CHART 2: Criteria Pie Chart
+      // ==========================================
+      const weightChart = new Chart(document.getElementById('weightChart'), {
+        type: 'pie',
+        data: {
+          labels: ['Cost', 'Infection Risk', 'Carbon', 'Energy', 'Reliability'],
+          datasets: [{
+            data: [weights.cost, weights.risk, weights.carbon, weights.energy, weights.reliability],
+            backgroundColor: ['#dc3545', '#ffc107', '#198754', '#0dc6de', '#6610f2']
+          }]
+        },
+        options: { 
+          responsive: true,
+          animation: false
+        }
+      });
+
+      // ==========================================
+      // CHART 3: Grouped Criteria Bar Chart
+      // ==========================================
+      const criteriaFields = ['Cost', 'Risk', 'Carbon', 'Energy', 'Reliability'];
+      const dynamicDatasets = rawRoutes.map((routeObj, idx) => {
+        const palette = ['#0d6efd', '#198754', '#ffc107', '#dc3545', '#6f42c1'];
+        return {
+          label: routeObj.route,
+          data: [routeObj.cost, routeObj.risk, routeObj.carbon, routeObj.energy, routeObj.reliability],
+          backgroundColor: palette[idx % palette.length] + 'b3', 
+          borderColor: palette[idx % palette.length],
+          borderWidth: 1
+        };
+      });
+
+      const criteriaChart = new Chart(document.getElementById('criteriaChart'), {
+        type: 'bar',
+        data: {
+          labels: criteriaFields,
+          datasets: dynamicDatasets
+        },
+        options: {
+          responsive: true,
+          animation: false,
+          scales: { y: { beginAtZero: true } }
+        }
+      });
+
+      // ==========================================
+      // ACTIONS: Excel Exporter Engine (SheetJS)
+      // ==========================================
+      document.getElementById('downloadExcel').addEventListener('click', () => {
+        const structure = resultData.ranking.map((item, index) => ({
+          "Rank": index + 1,
+          "Route Name": item.route,
+          "TOPSIS Score": item.score
+        }));
+        
+        const worksheet = XLSX.utils.json_to_sheet(structure);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Rankings Matrix");
+        XLSX.writeFile(workbook, "Healthcare_Route_Rankings.xlsx");
+      });
+
+      // ==========================================
+      // ACTIONS: PDF Exporter Engine (Single-Column White Charts Layout)
+      // ==========================================
+     document.getElementById("downloadPDF").addEventListener("click", () => {
+    const { jsPDF } = window.jspdf;
+   const doc = new jsPDF({
+    orientation: "landscape",
+    unit: "mm",
+    format: [440, 420]
+});
+
+const pageWidth = doc.internal.pageSize.getWidth();
+const pageHeight = doc.internal.pageSize.getHeight();
+
+    let currentY = 15;
+
+    doc.setFont("helvetica","bold");
+    doc.setFontSize(22);
+    doc.setTextColor(13,110,253);
+    doc.text("SMARTROUTE",14,currentY);
+
+    currentY+=8;
+    doc.setFontSize(12);
+    doc.setFont("helvetica","normal");
+    doc.setTextColor(80);
+    doc.text("Healthcare Waste Transportation Decision Support System",14,currentY);
+
+    currentY+=8;
+    doc.setDrawColor(180);
+   doc.line(
+    14,
+    currentY,
+    pageWidth - 14,
+    currentY
+);
+
+    currentY+=8;
+
+    doc.setFont("helvetica","bold");
+    doc.setFontSize(13);
+    doc.setTextColor(0);
+    doc.text("Hospital Information",14,currentY);
+
+    currentY+=3;
+
+    doc.autoTable({
+        startY: currentY,
+        theme:"grid",
+        head:[["Field","Value"]],
+        body:[
+            ["Hospital Name",resultData.hospital.hospital_name],
+            ["Hospital Location",resultData.hospital.hospital_location],
+            ["Waste Generated",resultData.hospital.waste_generated+" kg/day"],
+            ["Destination CBWTF",resultData.hospital.destination]
+        ],
+        styles:{fontSize:10},
+        headStyles:{fillColor:[13,110,253]}
+    });
+
+    currentY=doc.lastAutoTable.finalY+6;
+
+    doc.setFont("helvetica","bold");
+    doc.text("Decision Summary",14,currentY);
+
+    currentY+=3;
+
+    doc.autoTable({
+        startY:currentY,
+        theme:"grid",
+        head:[["Metric","Value"]],
+        body:[
+            ["Best Route",resultData.best_route],
+            ["Worst Route",resultData.worst_route],
+            ["Highest Score",resultData.best_score],
+            ["Total Routes",resultData.ranking.length]
+        ],
+        styles:{fontSize:10},
+        headStyles:{fillColor:[25,135,84]}
+    });
+
+    currentY=doc.lastAutoTable.finalY+6;
+
+    doc.setFont("helvetica","bold");
+    doc.text("Route Ranking",14,currentY);
+
+    currentY+=3;
+
+    doc.autoTable({
+        startY:currentY,
+        theme:"striped",
+        head:[["Rank","Route","TOPSIS Score"]],
+        body:resultData.ranking.map((r,i)=>[i+1,r.route,r.score]),
+        styles:{fontSize:10},
+        headStyles:{fillColor:[108,117,125]}
+    });
+
+    currentY=doc.lastAutoTable.finalY+8;
+
+    // =============================
+// Visual Analytics Section
+// =============================
+
+const scoreImg = document.getElementById("scoreChart").toDataURL("image/png");
+const weightImg = document.getElementById("weightChart").toDataURL("image/png");
+const criteriaImg = document.getElementById("criteriaChart").toDataURL("image/png");
+
+// Leave some space after ranking table
+currentY += 8;
+
+// Section Heading
+doc.setFont("helvetica", "bold");
+doc.setFontSize(14);
+doc.setTextColor(0);
+doc.text("Visual Analytics", 14, currentY);
+
+currentY += 6;
+
+// =============================
+// Draw Chart Container
+// =============================
+
+// ===== Dynamic Width =====
+const leftMargin = 14;
+const rightMargin = 14;
+
+const tableWidth = pageWidth - leftMargin - rightMargin;
+
+// Outer Border
+doc.setDrawColor(120);
+doc.setLineWidth(0.5);
+const containerHeight = 210;
+const topSectionHeight = 85;
+
+doc.rect(leftMargin, currentY, tableWidth, containerHeight);
+// Middle Line
+const middleX = leftMargin + tableWidth / 2;
+doc.line(
+    middleX,
+    currentY,
+    middleX,
+    currentY + topSectionHeight+20
+);
+// Horizontal Line
+doc.line(
+    leftMargin,
+    currentY + topSectionHeight+20,
+    leftMargin + tableWidth,
+    currentY + topSectionHeight+20
+);
+// =============================
+// Chart Titles
+// =============================
+
+doc.setFontSize(11);
+doc.setFont("helvetica", "bold");
+
+doc.text("TOPSIS Score Distribution", leftMargin + 8, currentY + 8);
+
+doc.text("Criteria Weight Distribution", middleX + 8, currentY + 8);
+
+doc.text(
+    "Criteria Comparison",
+    leftMargin + 8,
+    currentY + topSectionHeight + 28
+);
+// =============================
+// Insert Charts
+// =============================
+
+const chartWidth = (tableWidth / 2) - 20;
+
+// Left Chart
+doc.addImage(
+    scoreImg,
+    "PNG",
+    leftMargin + 6,
+    currentY + 12,
+    chartWidth,
+    80
+);
+
+// Right Chart
+doc.addImage(
+    weightImg,
+    "PNG",
+    middleX + 30,
+    currentY + 14,
+    chartWidth-40,
+    80
+);
+
+// Bottom Chart
+doc.addImage(
+    criteriaImg,
+    "PNG",
+    leftMargin + 12,
+    currentY + topSectionHeight + 34,
+    tableWidth - 24,
+    85
+);
+
+// =============================
+// Footer
+// =============================
+
+
+// Footer Line
+doc.setDrawColor(180);
+doc.line(10, pageHeight - 15, pageWidth - 10, pageHeight - 15);
+
+// Footer Text
+doc.setFontSize(9);
+doc.setFont("helvetica", "normal");
+doc.setTextColor(100);
+
+doc.text(
+    "Generated by SmartRoute | " + new Date().toLocaleString(),
+    14,
+    pageHeight - 7
+);
+
+    doc.save("SmartRoute_Evaluation_Report.pdf");
+});
+    </script>
+  </body>
+</html>
